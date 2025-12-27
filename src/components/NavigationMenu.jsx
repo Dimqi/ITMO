@@ -2,7 +2,7 @@ import { Sidebar } from "primereact/sidebar";
 import { Menu } from "primereact/menu";
 import { Button } from "primereact/button";
 import { useState } from "react";
-
+import "../styles/navigationMenuStyles.css";
 
 
 export default function SidebarMenu({onLogout}) {
@@ -10,20 +10,17 @@ export default function SidebarMenu({onLogout}) {
 
     const items = [
         {
-            label: "Главная",
+            label: "Пример",
             icon: "pi pi-home",
-            //command: () => navigate("/")
         },
         {
-            label: "График",
+            label: "Пример",
             icon: "pi pi-chart-line",
-            //command: () => navigate("/graph")
         },
 
         {
-            label: "Таблица",
+            label: "Пример",
             icon: "pi pi-table",
-            //command: () => navigate("/table")
         },
         {
             separator: true

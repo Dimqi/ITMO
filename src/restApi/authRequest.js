@@ -13,6 +13,15 @@ export async function authRequest(mode, login, password){
         body: JSON.stringify({ username: login, password })
     });
 
+    if (res.status === 409) {
+        throw new Error("Conflict");
+    }
+
+    if (res.status === 401) {
+        throw new Error("Unknown user");
+    }
+
+
     if(res.ok) {
         return await res.json();
     } else {

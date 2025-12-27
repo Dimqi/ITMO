@@ -10,6 +10,10 @@ export async function checkHit(x, y, r) {
         body: JSON.stringify({ x, y, r })
     });
 
+    if(res.status === 401){
+        throw new Error("Unauthorized");
+    }
+
     if(res.ok) {
         return await res.json();
     } else {

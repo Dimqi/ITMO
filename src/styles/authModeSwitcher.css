@@ -1,0 +1,16 @@
+/* Переключатель режимов */
+.switcher {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 25px;
+}
+
+.active-button{
+    background: #A2F7F5;
+    border-radius: 2.5px;
+    border: 1px solid #848484;
+}
+
+.switcher .p-button {
+    width: 45%;
+}
