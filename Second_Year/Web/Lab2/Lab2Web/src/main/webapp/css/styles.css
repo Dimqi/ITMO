@@ -1,0 +1,160 @@
+body {
+  background: linear-gradient(90deg, purple, RGB(100 149 237));
+  
+}
+p{
+  margin: 2px;
+}
+h1{
+  margin: 3px;
+}
+
+h1 , p, label{
+  color: white;
+}
+
+.header {
+      font-family: serif;
+      font-size: 22px;
+      color: black;
+      text-align: center;
+    }
+
+#input-form, #svg_table{
+  display:inline-block;
+  margin-left: 7%;
+}
+
+.hit {
+	color: green;
+    font-weight: bold;
+}
+.miss {
+    color: red;
+    font-weight: bold;
+}       
+
+
+h2{
+  color:white; 
+  text-align:center;
+}
+
+.input_table {
+  max-width: 500px;
+  height:300px;
+  margin: 20px;
+  padding: 20px;
+  border: 1.5px solid RGB(255 182 193);
+  border-radius: 10px;
+  display:inline-block;
+}
+
+select{
+  width: 320px;
+  height: 100%;
+  cursor: pointer;
+  accent-color: #32B2AA; 
+}
+
+input[type="text"] {
+  width: 95%; 
+  padding: 5px; 
+}
+
+input[type="submit"]:hover { 
+  background: RGB(32, 178, 170); 
+  color: white;
+}  
+
+.r-btn {
+  padding: 5px 10px;
+  width: 17%;
+  margin: 1%;
+  border: 1px solid #333;
+  background-color: #f0f0f0;
+  cursor: pointer;
+}
+
+.r-btn.active {
+  background-color: RGB(32, 178, 170); 
+  color: white;
+}
+
+#results{
+  width: 80%;
+  border: 1px solid #ccc;
+  margin: 20px auto; 
+  background:white; 
+  border-collapse: collapse; 
+  text-align: center;
+}
+
+#results tbody {
+  display: block;
+  max-height: 200px;
+  overflow-y:scroll;
+  overflow-x:hidden;
+}
+
+#results tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+#results thead tr {
+  display: table;
+  width: 98.4%;
+  table-layout: fixed;
+}
+
+#results th, #results td {
+  word-wrap:break-word; 
+}
+
+svg{
+  background: #FFE4C4;
+}
+
+#toast-container{
+  position: fixed; 
+  top: 3%; 
+  right: 3%; 
+  z-index: 9999; 
+  
+}
+
+#toast-container td {
+  color: white;
+  padding: 10px 20px;
+  margin-top: 10px;
+  border-radius: 5px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  animation: fadeIn 0.5s, fadeOut 0.5s 3.5s;
+}
+
+#toast-container .error{
+  background: rgba(255, 0, 0, 0.9); 
+}
+
+#toast-container .success{
+  background: rgba(0, 255, 0, 0.9); 
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-10px); }
+}
+
+
+input[name="change_y"]::placeholder {
+  color: darkgray;
+  font-style: italic;
+}

@@ -1,0 +1,82 @@
+body {
+	font-family: Arial, sans-serif;
+    background: linear-gradient(90deg, purple, RGB(100 149 237));
+    text-align: center;
+    padding: 40px;
+    }
+table  {
+	margin: 0 auto;
+	border-collapse: collapse;
+	background: white;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+	border: 1px solid #ddd;
+	padding: 10px 20px;
+}
+
+th {
+	background: #f0f0f0;
+}
+
+.hit {
+	color: green;
+	font-weight: bold;
+}
+
+.miss {
+	color: red;
+	font-weight: bold;
+}
+
+a {
+	display: inline-block;
+	margin-top: 20px;
+	text-decoration: none;
+	color: #1976d2;
+	font-weight: bold;
+}
+
+#hrefIndex{
+	width: 250px;
+	height:50px;
+	background-color: white;
+	margin: 0 auto; 
+    text-align: center;
+	margin-top:10px;
+}
+
+
+
+#results{
+  width: 80%;
+  border: 1px solid #ccc;
+  margin: 20px auto; 
+  background:white; 
+  border-collapse: collapse; 
+  text-align: center;
+}
+
+#results tbody {
+  display: block;
+  max-height: 200px;
+  overflow-y:scroll;
+  overflow-x:hidden;
+}
+
+#results tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+#results thead tr {
+  display: table;
+  width: 98.4%;
+  table-layout: fixed;
+}
+
+#results th, #results td {
+  word-wrap:break-word; 
+}
