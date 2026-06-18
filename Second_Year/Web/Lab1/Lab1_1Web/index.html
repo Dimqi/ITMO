@@ -1,0 +1,144 @@
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Страница для ввода</title>
+  <link rel="stylesheet" href="/css/styles.css">
+  <script src="/js/script.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/decimal.js/10.4.3/decimal.min.js"></script>
+</head>  
+  
+<body>
+  <table class="header" width="100%">
+  <tr>
+    <td align="center">
+      <h1>Федоров Дмитрий Александрович</h1>
+      <p>P3206</p>
+      <p>Вариант: 467846</p>
+    </td>
+  </tr>
+</table>
+  
+  <table id="toast-container">
+    <tbody></tbody>
+  </table>
+  
+
+<form id="input-form" align="center">
+  
+  <table class="input_table" border="2" cellpadding="5">
+    <tr>
+      <td colspan="2" align="center" >
+        <h1>Форма для ввода</h1>
+      </td>
+    </tr>
+    
+    
+    <tr>
+      <td><label for="change_x">X:</label></td>
+      <td>
+      <label><input type="checkbox" name="x" value="-2"> -2</label>
+      <label><input type="checkbox" name="x" value="-1.5"> -1.5</label>
+      <label><input type="checkbox" name="x" value="-1"> -1</label>
+      <label><input type="checkbox" name="x" value="-0.5"> -0.5</label>
+      <label><input type="checkbox" name="x" value="0"> 0</label>
+      <label><input type="checkbox" name="x" value="0.5"> 0.5</label>
+      <label><input type="checkbox" name="x" value="1"> 1</label>
+      <label><input type="checkbox" name="x" value="1.5"> 1.5</label>
+      <label><input type="checkbox" name="x" value="2"> 2</label>
+    </td>
+    </tr>
+    <tr>
+      <td><label for="change_y">Y:</label></td>
+      <td><input type="text" id="change_y" name="change_y" placeholder= "от -5 до 5"></td>
+    </tr>
+    <tr>
+    <td><label for="r">R:</label></td>
+      <td>
+      <button type="button" class="r-btn" data-value="1">1</button>
+      <button type="button" class="r-btn" data-value="1.5">1.5</button>
+      <button type="button" class="r-btn" data-value="2">2</button>
+      <button type="button" class="r-btn" data-value="2.5">2.5</button>
+      <button type="button" class="r-btn" data-value="3">3</button>
+      </td>  
+    </tr>
+    <tr>
+      <td colspan="2" align="center">
+        <input type="submit" value="Отправить">
+      </td>
+    </tr>
+  </table>
+  
+</form>  
+
+
+<table id="svg_table">
+  <tr>
+    <td>
+      <svg width="400" height="400" xmlns="http://www.w3.org/2000/svg" >
+        
+        <rect x="50" y="125" width="150" height="75" fill="lightblue" />
+        <path d="M200,200 L275,200 A75,75 0 0,1 200,275" fill="lightblue"/>
+        <polygon points="200,200 125,200 200,275" fill="lightblue"/>
+ 
+  
+      <!-- ось X -->
+        <line x1="0" y1="200" x2="400" y2="200" stroke="black" stroke-width="2"/>
+        
+        <line x1="50" y1="195" x2="50" y2="205" stroke="black"/>
+        <text x="45" y="192" font-size="12">-R</text>
+        
+        <line x1="125" y1="195" x2="125" y2="205" stroke="black"/>
+        <text x="120" y="192" font-size="12">-R/2</text>
+        
+        <line x1="275" y1="195" x2="275" y2="205" stroke="black"/>
+        <text x="270" y="192" font-size="12">R/2</text>
+        
+        <line x1="350" y1="195" x2="350" y2="205" stroke="black"/>
+        <text x="345" y="192" font-size="12">R</text>
+        
+        <line x1="392" y1="192" x2="400" y2="200" stroke="black"/>
+        <line x1="392" y1="208" x2="400" y2="200" stroke="black"/>
+        <text x="395" y="192" font-size="12">x</text>
+      <!-- ось Y -->
+      <line x1="200" y1="0" x2="200" y2="400" stroke="black" stroke-width="2"/>
+        
+        <line x1="195" y1="50" x2="205" y2="50" stroke="black"/>
+        <text x="208" y="53" font-size="12">R</text>
+        
+        <line x1="195" y1="125" x2="205" y2="125" stroke="black"/>
+        <text x="208" y="128" font-size="12">R/2</text>
+        
+        <line x1="195" y1="275" x2="205" y2="275" stroke="black"/>
+        <text x="208" y="278" font-size="12">-R/2</text>
+        
+        <line x1="195" y1="350" x2="205" y2="350" stroke="black"/>
+        <text x="208" y="353" font-size="12">-R</text>
+        
+        <line x1="200" y1="0" x2="192" y2="8" stroke="black"/>
+        <line x1="200" y1="0" x2="208" y2="8" stroke="black"/>
+        <text x="210" y="5" font-size="12">y</text>
+        
+       </svg>
+  </td>
+</tr>
+</table>
+  
+  <h2>Результаты</h2>
+<table id="results" border="1" cellpadding="5">
+  <thead>
+    <tr>
+      <th>X</th>
+      <th>Y</th>
+      <th>R</th>
+      <th>Попадание</th>
+      <th>Время запроса</th>
+      <th>Время работы скрипта</th>
+    </tr>
+  </thead>
+  <tbody>
+  
+  </tbody>
+</table>
+  
+</body>  
