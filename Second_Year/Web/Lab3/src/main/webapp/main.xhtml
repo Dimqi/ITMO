@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:svg="http://www.w3.org/2000/svg">
+<h:head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Страница для ввода</title>
+	<script src="js/mainScript.js"></script>
+	<h:outputStylesheet library="css" name="mainStyles.css" />
+</h:head>
+<h:body>
+
+
+
+
+
+	<table id="toast-container">
+		<tbody></tbody>
+	</table>
+	
+	<div id="input-form-and-svg">
+
+		<div id="input-form-wrapper">
+			<h:form id="input-form">
+				<input type="hidden" name="formId" value="pointCoordinates" />
+
+				<h1>Форма для ввода</h1>
+
+				<!-- X -->
+				<div class="form-group">
+					<h:outputText value="Диапазон X: от -5 до 5" style="display:block; color:gray; font-size: 0.9em;" />
+					<label for="change_x">X:</label>
+					<p:spinner id="change_x" value="#{pointDataBean.x}" 
+						 stepFactor="0.1" required="true" requiredMessage="X обязателен"> 
+						<f:validator validatorId="rangeValidator" />
+					</p:spinner>
+					<h:message for="change_x" style="display:block; color:red; margin:0.5px;" />
+				</div>
+
+				<!-- Y -->
+				<div class="form-group">
+					<h:outputText value="Диапазон Y: от -5 до 5" style="display:block; color:gray; font-size: 0.9em;" />
+					<label for="change_y">Y:</label>
+					<h:inputText id="change_y" value="#{pointDataBean.y}"
+						placeholder="от -5 до 5" required="true"
+						requiredMessage="Y обязателен">
+						<f:validator validatorId="rangeValidator" />
+					</h:inputText>
+					<h:message for="change_y" style="display:block; color:red; margin:0.5px;" />
+					
+				</div>
+
+				<!-- R -->
+				<div class="form-group">
+					<h:outputText value="Диапазон R: от 1 до 4" style="display:block; color:gray; font-size: 0.9em;" />
+					<label for="change_r">R:</label>
+					<h:inputText id="change_r" value="#{pointDataBean.r}" placeholder="от 1 до 4" required="true" requiredMessage="R обязателен" onkeyup="updateSvgScale()">
+						<f:validator validatorId="rangeValidator" />
+						
+					</h:inputText>
+					<h:message for="change_r" style="display:block; color:red; margin:0.5px;" />
+				</div>
+
+				<!-- Submit -->
+				<div class="form-group">
+					<h:commandButton value="Отправить" action="#{pointDataBean.check}"
+						update="graph results-table-form" />
+				</div>
+
+			</h:form>
+		</div>
+
+
+		<h:form id="graph-form">
+			<h:inputHidden id="graph_x" value="#{pointDataBean.x}" />
+			<h:inputHidden id="graph_y" value="#{pointDataBean.y}" />
+			<h:inputHidden id="graph_r" value="#{pointDataBean.r}" />
+			
+			<p:remoteCommand name="submitFromGraph"
+				action="#{pointDataBean.check}" 
+				process="@this graph_x graph_y graph_r"
+				update="graph results-table-form"/>
+		</h:form>
+
+		<div id="svg_container">
+		
+		<h:panelGroup id="graph">
+			
+			<svg width="550" height="550" onclick="handleGraphClick(event)" style="cursor: pointer;">
+			
+        	<!-- Центр -->
+        	<rect x="250" y="275" width="25" height="50" fill="lightblue" />        
+        	<path d="M275,275 L275,250 A50,50 0 0,0 250,275" fill="lightblue"/>
+        	<polygon points="275,275 275,250 300,275" fill="lightblue"/>
+
+        	<!-- Ось X -->
+        	<line x1="50" y1="275" x2="500" y2="275" stroke="black" stroke-width="2"/>
+        	<!-- Черточки X -->
+        	<line data-value="-1" data-axis="x" x1="225" x2="225" y1="270" y2="280" stroke="black"/>
+        	<text class="r-neg" data-value="-1" data-axis="x" x="225" y="265" font-size="14">-#{pointDataBean.r}</text>
+
+        	<line data-value="-0.5" data-axis="x" x1="250" x2="250" y1="270" y2="280" stroke="black"/>
+        	<text class="r-half-neg" data-value="-0.5" data-axis="x" x="250"  y="265" font-size="14">-#{pointDataBean.r.divide(2)}</text>
+
+        	<line data-value="0.5" data-axis="x" x1="300" x2="300" y1="270" y2="280" stroke="black"/>
+        	<text class="r-half-pos" data-value="0.5" data-axis="x" x="300" y="265" font-size="14">#{pointDataBean.r.divide(2)}</text>
+	
+    	    <line data-value="1" data-axis="x" x1="325" x2="325" y1="270" y2="280" stroke="black"/>
+        	<text class="r-pos" data-value="1" data-axis="x" x="325" y="265" font-size="14">#{pointDataBean.r}</text>
+		
+		
+        	<line x1="492" y1="272" x2="500" y2="275" stroke="black"/>
+        	<line x1="492" y1="278" x2="500" y2="275" stroke="black"/>
+        	<text x="510" y="275" font-size="14">x</text>
+
+        	<!-- Ось Y -->
+        	<line x1="275" y1="50" x2="275" y2="500" stroke="black" stroke-width="2"/>
+        	<!-- Черточки Y -->
+        	<line data-value="1" data-axis="y" y1="225" y2="225" x1="270" x2="280" stroke="black"/>
+        	<text class="r-pos" data-value="1" data-axis="y" y="225" x="285" font-size="14">#{pointDataBean.r}</text>
+
+	        <line data-value="0.5" data-axis="y" y1="250" y2="250" x1="270" x2="280" stroke="black"/>
+    	    <text class="r-half-pos" data-value="0.5" data-axis="y" y="250" x="285" font-size="14">#{pointDataBean.r.divide(2)}</text>
+	
+    	    <line data-value="-0.5" data-axis="y" y1="300" y2="300" x1="270" x2="280" stroke="black"/>
+        	<text class="r-half-neg" data-value="-0.5" data-axis="y" y="300" x="285" font-size="14">-#{pointDataBean.r.divide(2)}</text>
+	
+    	    <line data-value="-1" data-axis="y" y1="325" y2="325"  x1="270" x2="280" stroke="black"/>
+        	<text class="r-neg" data-value="-1" data-axis="y" y="325" x="285" font-size="14">-#{pointDataBean.r}</text>
+
+        	<!-- Метки осей -->
+        	<line x1="275" y1="50" x2="267" y2="58" stroke="black"/>
+        	<line x1="275" y1="50" x2="283" y2="58" stroke="black"/>
+        	<text x="285" y="55" font-size="14">y</text>
+        
+        	<!-- Результаты -->
+
+
+				<ui:repeat value="#{hitHistoryBean.hits}" var="point">
+   					<circle r="4" data-x="#{point.x}" data-y="#{point.y}"
+									cx="#{275 + point.x * 50}" cy="#{275 - point.y * 50}"
+									fill="#{point.hit ? 'green' : 'red'}" />
+				</ui:repeat>
+
+     
+        
+      		</svg>
+      		</h:panelGroup>
+		</div>
+	</div>
+
+
+	<div id="result-table">
+		<h:form id="results-table-form">
+			<p:dataTable value="#{hitHistoryBean.hits}" var="row" border="1"
+						styleClass="results-table">
+				<p:column headerText="X">
+					<h:outputText value="#{row.x}" />
+				</p:column>
+
+				<p:column headerText="Y">
+					<h:outputText value="#{row.y}" />
+				</p:column>
+
+				<p:column headerText="R">
+					<h:outputText value="#{row.r}" />
+				</p:column>
+
+				<p:column headerText="Попадание">
+					<h:outputText value="#{row.hit ? 'Попадание' : 'Мимо'}" 
+								styleClass="#{row.hit ? 'hit' : 'miss'}" />
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+	</div>
+
+
+	<h:form id="link-to-index">
+			<p:commandLink value="Вернуться на стартовую страницу" action="#{navigationBean.goToIndex}" styleClass="round-button"/>
+		</h:form>
+
+
+</h:body>
+
+</html>
