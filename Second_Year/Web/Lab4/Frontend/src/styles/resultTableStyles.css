@@ -1,0 +1,27 @@
+#result-table{
+    max-height: 400px;
+    overflow-y: auto;
+    width: 90%;
+    border-collapse: collapse;
+    margin: 5% 5%;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+#result-table th {
+    background: #34495e;
+    color: white;
+}
+
+
+#result-table td  {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.hit{
+    color: green;
+}
+.miss{
+    color: red;
+}

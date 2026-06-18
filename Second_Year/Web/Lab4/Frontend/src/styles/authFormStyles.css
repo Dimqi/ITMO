@@ -1,0 +1,26 @@
+/* Форма */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+
+.input {
+    width: 82%;
+}
+.p-password{
+    width: 100%;
+}
+
+/* Кнопка отправки */
+.submit-button {
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* Тонкая анимация наведения */
+.submit-button:hover {
+    transform: translateY(-1px);
+    transition: 0.15s;
+}
