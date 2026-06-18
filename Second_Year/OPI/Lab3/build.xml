@@ -1,0 +1,387 @@
+<project name="Lab3Web" default="build" basedir=".">
+    <property file="build.properties"/>
+
+    <path id="project.classpath">
+        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+    </path>
+
+    <target name="clean">
+
+        <delete dir="${build.dir}" includeEmptyDirs="true"/>
+        <delete dir="${alt.build.dir}" includeEmptyDirs="true"/>
+        <delete dir="${test.report.dir}" includeEmptyDirs="true"/>
+        <delete file="${history.diff.file}" failonerror="false"/>
+
+    </target>
+
+    <target name="compile">
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false" classpathref="project.classpath" encoding="UTF-8"/>
+    </target>
+
+    <target name="build" depends="compile">
+        <mkdir dir="${jar.dir}"/>
+        <jar destfile="${jar.dir}/${project.name}.jar" basedir="${classes.dir}">
+            <manifest>
+                <attribute name="Manifest-Version" value="${project.version}"/>
+                <attribute name="Main-Class" value="${main.class}"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="xml">
+        <xmlvalidate failonerror="yes" lenient="yes" warn="yes">
+            <fileset dir="." includes="**/*.xml">
+                <exclude name="${build.dir}/**"/>
+                <exclude name="${alt.build.dir}/**"/>
+                <exclude name="build.xml"/>
+                <exclude name=".git/**"/>
+                <exclude name=".svn/**"/>
+            </fileset>
+        </xmlvalidate>
+    </target>
+
+    <target name="music" depends="build">
+        <exec executable="cmd">
+            <arg value="/c"/>
+            <arg value="start"/>
+            <arg value=""/>
+            <arg value="${music.file}"/>
+        </exec>
+    </target>
+
+    <target name="native2ascii">
+        <mkdir dir="${native2ascii.dir}"/>
+        <native2ascii encoding="UTF-8" 
+                    src="src/main/resources" 
+                    dest="${native2ascii.dir}/messages.properties"/>
+    </target>
+
+    <target name="scp" depends="build">
+        <scp file="${jar.dir}/${project.name}.jar"
+            todir="${scp.host}${scp.dir}"
+            port="${scp.port}"
+            username="${scp.user}"
+            password="${scp.password}"
+            trust="true"
+            verbose="true"/>
+    </target>
+
+    <target name="doc" depends="build">
+        <mkdir dir="${build.dir}/javadoc"/>
+
+        <javadoc sourcepath="${src.dir}"
+            destdir="${build.dir}/javadoc"
+            encoding="UTF-8"
+            packagenames="*">
+
+            <fileset dir="${src.dir}" includes="**/*.java"/>
+            <classpath refid="project.classpath"/>
+
+        </javadoc>
+
+        <checksum file="${jar.dir}/${project.name}.jar"
+                property="jar.md5"
+                algorithm="MD5"/>
+
+        <checksum file="${jar.dir}/${project.name}.jar"
+                property="jar.sha1"
+                algorithm="SHA-1"/>
+
+        <jar destfile="${jar.dir}/${project.name}.jar"
+                update="true">
+            
+            <fileset dir="${build.dir}/javadoc"/>
+
+            <manifest>
+                <attribute name="Manifest-Version" value="${project.version}"/>
+                <attribute name="Main-Class" value="${main.class}"/>
+                <attribute name="MD5" value="${jar.md5}"/>
+                <attribute name="SHA-1" value="${jar.sha1}"/>
+            </manifest>
+
+        </jar>
+    </target>
+    
+
+  <target name="alt">
+        <delete dir="${alt.build.dir}"/>
+        <mkdir dir="${alt.src.dir}"/>
+        <mkdir dir="${alt.classes.dir}"/>
+        <mkdir dir="${alt.jar.dir}"/>
+
+        <copy todir="${alt.src.dir}">
+            <fileset dir="${src.dir}"/>
+        </copy>
+
+
+        <replace dir="${alt.src.dir}" replacefilterfile="alt.properties" includes="**/*.java"/>
+
+        <exec executable="powershell" failonerror="true">
+            <arg value="-NoProfile"/>
+            <arg value="-Command"/>
+            <arg value="Get-Content alt.properties | ForEach-Object { 
+                $parts = $_.Split('='); 
+                if ($parts.Count -eq 2) { 
+                    $k = $parts[0].Trim(); $v = $parts[1].Trim(); 
+                    $files = Get-ChildItem -Path '${alt.src.dir}' -Filter ($k + '.java') -Recurse;
+                    foreach ($f in $files) {
+                        $newName = $f.Name -replace $k, $v;
+                        $tempPath = $f.FullName + '.tmp';
+                        Rename-Item -Path $f.FullName -NewName $tempPath;
+                        Rename-Item -Path $tempPath -NewName $newName;
+                        Write-Host 'Renamed file:' $f.Name '->' $newName;
+                    }
+                } 
+            }"/>
+        </exec>
+
+        <antcall target="build">
+            <param name="src.dir" value="${alt.src.dir}"/>
+            <param name="classes.dir" value="${alt.classes.dir}"/>
+            <param name="jar.dir" value="${alt.jar.dir}"/>
+            <param name="project.name" value="${project.name}-alt"/>
+        </antcall>
+        
+    </target>
+
+
+    <target name="test" depends="build">
+        <mkdir dir="${test.classes.dir}"/>
+        <mkdir dir="${test.report.dir}"/>
+
+        <javac srcdir="${test.src.dir}"
+               destdir="${test.classes.dir}"
+               includeantruntime="false"
+               encoding="UTF-8">
+            <classpath>
+                <path refid="project.classpath"/>
+                <pathelement path="${classes.dir}"/>
+            </classpath>
+        </javac>
+
+        <junitlauncher haltOnFailure="true" printSummary="true">
+            <classpath>
+                <path refid="project.classpath"/>
+                <pathelement path="${classes.dir}"/>
+                <pathelement path="${test.classes.dir}"/>
+            </classpath>
+
+            <testclasses outputdir="${test.report.dir}">
+                <fileset dir="${test.classes.dir}">
+                    <include name="**/*Test.class"/>
+                </fileset>
+                
+                <listener type="legacy-xml" sendSysOut="true" sendSysErr="true"/>
+            </testclasses>
+        </junitlauncher>
+    </target>
+
+
+    <target name="report" depends="test">
+    
+        <exec executable="svn">
+            <arg value="add"/>
+            <arg value="${test.report.dir}"/>
+            <arg value="--force"/>
+        </exec>
+        
+        <exec executable="svn">
+            <arg value="commit"/>
+            <arg value="-m"/>
+            <arg value="${svn.message}"/>
+            <arg value="${test.report.dir}"/>
+            <arg value="--non-interactive"/>
+        </exec>
+
+    </target>
+
+    <target name="env">
+        <mkdir dir="${classes.dir}"/>
+        
+        <javac srcdir="${src.dir}"
+                destdir="${classes.dir}"
+                includeantruntime="false"
+                fork="yes"
+                executable="${alt.java.home}/bin/javac">
+            <classpath refid="project.classpath"/>
+        </javac>
+        
+        <java classname="${main.class}" 
+                fork="true" 
+                jvm="${alt.java.home}/bin/java">
+            <jvmarg line="${alt.jvm.args}"/>
+            <classpath>
+                <path refid="project.classpath"/>
+                <pathelement path="${classes.dir}"/>
+            </classpath>
+        </java>
+    </target>
+
+
+    <target name="diff">
+        <exec executable="git" outputproperty="git.diff.output">
+            <arg value="diff"/>
+            <arg value="--name-only"/>
+        </exec>
+
+        <echo message="detected changes in:"/>
+        <echo message="${git.diff.output}"/>
+
+        <condition property="git.can.commit">
+            <and>
+                <not>
+                    <equals arg1="${git.diff.output}" arg2=""/>
+                </not>
+                <not>
+                    <matches string="${git.diff.output}" pattern="${critical.classes}"/>
+                </not>
+            </and>
+        </condition>
+
+        <antcall target="git-commit"/>
+        
+        <antcall target="git-skip-message"/>
+    </target>
+
+
+    <target name="git-skip-message" unless="git.can.commit">
+        <echo message="Сommit contains no changes or critical classes have been modified."/>
+    </target>
+
+    <target name="git-commit" if="git.can.commit">
+        <echo message="No critical changes"/>
+        <exec executable="git">
+            <arg value="add"/>
+            <arg value="."/>
+        </exec>
+        <exec executable="git">
+            <arg value="commit"/>
+            <arg value="-m"/>
+            <arg value="${git.commit.message}"/>
+        </exec>
+    </target>
+
+    <target name="team" depends="build">
+        <delete dir="${team.dir}"/>
+        <mkdir dir="${team.dir}"/>
+
+        <exec executable="svn" outputproperty="rev.1">
+            <arg line="info --show-item revision"/>
+        </exec>
+
+        <exec executable="cmd" outputproperty="rev.2"><arg line="/c set /a ${rev.1}-1"/></exec>
+        <exec executable="cmd" outputproperty="rev.3"><arg line="/c set /a ${rev.1}-2"/></exec>
+
+        <echo message="Revisions: ${rev.1}, ${rev.2}, ${rev.3}"/>
+
+        <antcall target="build-one-rev"><param name="r" value="${rev.1}"/></antcall>
+        <antcall target="build-one-rev"><param name="r" value="${rev.2}"/></antcall>
+        <antcall target="build-one-rev"><param name="r" value="${rev.3}"/></antcall>
+
+        <zip destfile="${team.zip}" basedir="${team.dir}" includes="**/*.jar"/>
+    </target>
+
+    <target name="build-one-rev">
+        
+        <exec executable="svn" failonerror="true">
+            <arg line="export -r ${r} . ${team.dir}/${r}"/>
+        </exec>
+
+        <ant antfile="${basedir}/build.xml" target="build" dir="${team.dir}/${r}" inheritAll="false">
+            
+            <property file="${basedir}/build.properties"/>
+            
+            <property name="lib.dir" value="lib"/>
+            
+            <property name="jar.dir" value="result-jar"/>
+
+            <property name="project.name" value="${project.name}"/>
+            <property name="project.version" value="${project.version}"/>
+            <property name="main.class" value="${main.class}"/>
+        </ant>
+    </target>
+
+
+   <target name="history">
+        <antcall target="history-loop">
+            <param name="broken.rev" value="none"/>
+        </antcall>
+    </target>
+
+    <target name="history-loop">
+        <local name="st"/>
+        
+        <exec executable="cmd" resultproperty="st">
+            <arg line="/c ant compile"/>
+        </exec>
+
+
+        <condition property="compile.success">
+            <equals arg1="${st}" arg2="0"/>
+        </condition>
+
+        <antcall target="history-success"/>
+        <antcall target="history-fail"/>
+    </target>
+
+    <target name="history-success" if="compile.success">
+        <local name="work.rev"/>
+        <exec executable="svn" outputproperty="work.rev">
+            <arg line="info --show-item revision"/>
+        </exec>
+
+        <antcall target="history-diff"/>
+    </target>
+
+    <target name="history-fail" unless="compile.success">
+        <local name="curr"/>
+        <local name="prev"/>
+        <local name="is.not.first"/>
+
+        <exec executable="svn" outputproperty="curr">
+            <arg value="info"/>
+            <arg value="--show-item"/>
+            <arg value="revision"/>
+            <arg value="${src.dir}"/> 
+        </exec>
+        
+        <condition property="is.not.first">
+            <not><equals arg1="${curr}" arg2="1"/></not>
+        </condition>
+        <fail message="Reached r1 and still no success." unless="is.not.first"/>
+
+        <exec executable="cmd" outputproperty="prev">
+            <arg line="/c set /a ${curr}-1"/>
+        </exec>
+
+        <exec executable="svn">
+            <arg value="update"/>
+            <arg value="-r"/>
+            <arg value="${prev}"/>
+            <arg value="--accept"/>
+            <arg value="theirs-full"/>
+            <arg value="${src.dir}"/>
+        </exec>
+
+        <antcall target="history-loop">
+            <param name="broken.rev" value="${curr}"/>
+        </antcall>
+    </target>
+
+    <target name="history-diff">
+        <condition property="need.diff">
+            <not><equals arg1="${broken.rev}" arg2="none"/></not>
+        </condition>
+        <antcall target="do-diff"/>
+    </target>
+
+    <target name="do-diff" if="need.diff">
+        <echo message="Creating diff for r${broken.rev}"/>
+        <exec executable="svn" output="history_diff.txt">
+            <arg line="diff -c ${broken.rev}"/>
+        </exec>
+    </target>
+
+
+</project>

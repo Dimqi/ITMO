@@ -1,0 +1,162 @@
+@charset "UTF-8";
+
+
+body {
+  background: linear-gradient(90deg, purple, RGB(100 149 237));
+}
+
+#input-form-and-svg{
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  gap: 100px; 
+  margin: 0 auto;
+}
+
+#input-form-wrapper{
+	display:block;
+	width: 300px;
+	height: 360px;
+	border: 4px solid #32bba2;
+	padding: 10px;
+	border-radius: 20px;
+	background:white;
+	text-align:center;
+}
+
+
+.form-group{
+	margin-top: 10px
+}
+
+input[type="text"] {
+  width: 90%; 
+  padding: 5px; 
+}
+
+input[type="submit"]:hover { 
+  background: RGB(32, 178, 170); 
+  color: white;
+}  
+
+span.ui-button-text {
+    display: block;
+}
+
+svg{
+  background: white;
+}
+
+
+
+
+
+#toast-container {
+  position: fixed; 
+  top: 3%; 
+  right: 3%; 
+  z-index: 9999; 
+}
+
+#toast-container td {
+  color: white;
+  padding: 10px 20px;
+  margin-top: 10px;
+  border-radius: 5px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  animation: fadeOut 4s forwards;
+}
+
+#toast-container .error {
+  background: rgba(255, 0, 0, 0.9); 
+}
+
+#toast-container .success {
+  background: rgba(0, 255, 0, 0.9); 
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+	transform: translateY(-10px);
+  }
+  20%{
+	  opacity: 1;
+	  transform: translateY(0px);
+  }
+  99% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+	transform: translateY(10px);
+	
+  }
+}
+
+.toast-row {
+  opacity: 1;
+  visibility: visible;
+  animation:fadeOut 4s;
+
+}
+
+
+
+
+#link-to-index{
+	text-align: center; 
+	margin-top: 10%;
+}
+
+
+.round-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white !important;
+    text-decoration: none !important;
+    border-radius: 12px;          
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.round-button:hover {
+    background-color: #45a049;   
+}
+
+#result-table .results-table.ui-datatable.ui-widget {
+	max-height: 400px;
+    overflow-y: auto; 
+    width: 90%;
+    border-collapse: collapse;
+    margin: 5% 5%;
+}
+
+#result-table .results-table.ui-datatable.ui-widget th.ui-state-default {
+    background: #34495e;
+    color: white;
+    padding: 12px;
+	text-align: center;
+}
+
+
+#result-table .results-table.ui-datatable.ui-widget td  {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+	
+}
+
+#result-table .results-table.ui-datatable.ui-widget .hit {
+    color: green;
+    font-weight: bold;
+}
+
+#result-table .results-table.ui-datatable.ui-widget .miss{
+    color: red;
+    font-weight: bold;
+}
