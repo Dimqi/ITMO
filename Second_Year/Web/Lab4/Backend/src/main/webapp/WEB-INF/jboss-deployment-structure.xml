@@ -1,0 +1,8 @@
+<jboss-deployment-structure>
+    <deployment>
+        <exclusions>
+
+            <module name="io.jsonwebtoken" />
+        </exclusions>
+    </deployment>
+</jboss-deployment-structure>
