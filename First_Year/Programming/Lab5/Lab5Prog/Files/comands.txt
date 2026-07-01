@@ -1,0 +1,7 @@
+execute_script comands.txt
+sdgsgs
+help
+
+
+show
+update 9
