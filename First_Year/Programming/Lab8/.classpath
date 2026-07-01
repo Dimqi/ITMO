@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="resources"/>
+	<classpathentry kind="lib" path="D:/Lab8Git/Lab_8/Lab_8/src/libs/postgresql-42.7.5.jar"/>
+	<classpathentry kind="output" path="out/production/Lab_8.4"/>
+</classpath>
